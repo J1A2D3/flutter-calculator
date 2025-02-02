@@ -48,6 +48,16 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
           _accumulator = 'Error';
           _expression = '';
         }
+      } else if (value == 'x²') {
+        try {
+          final parsedExpression = Expression.parse(_expression);
+          final evaluator = const ExpressionEvaluator();
+          final result = evaluator.eval(parsedExpression, {});
+          _expression = (result * result).toString();
+        } catch (e) {
+          _accumulator = 'Error';
+          _expression = '';
+        }
       } else {
         _expression += value;
       }
@@ -60,6 +70,7 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       style: ElevatedButton.styleFrom(
         padding: const EdgeInsets.all(20),
         textStyle: const TextStyle(fontSize: 24),
+        shape: CircleBorder(), // Ensures circular buttons
       ),
       child: Text(label),
     );
@@ -71,37 +82,41 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
       appBar: AppBar(title: const Text('Calculator - Jad Albatal')),
       body: Column(
         children: [
-          Expanded(
-            child: Container(
-              alignment: Alignment.bottomRight,
-              padding: const EdgeInsets.all(24),
-              child: Text(
-                _accumulator,
-                style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
-              ),
-            ),
-          ),
-          Expanded(
-            child: Container(
-              alignment: Alignment.bottomRight,
-              padding: const EdgeInsets.all(24),
-              child: Text(
-                _expression,
-                style: const TextStyle(fontSize: 32),
-              ),
+          Container(
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            alignment: Alignment.centerRight,
+            child: Text(
+              _accumulator,
+              style: const TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
+              textAlign: TextAlign.right,
             ),
           ),
           Container(
-            width: 300,
-            child: GridView.count(
-              shrinkWrap: true,
-              crossAxisCount: 4,
-              children: [
-                _buildButton('7'), _buildButton('8'), _buildButton('9'), _buildButton('/'),
-                _buildButton('4'), _buildButton('5'), _buildButton('6'), _buildButton('*'),
-                _buildButton('1'), _buildButton('2'), _buildButton('3'), _buildButton('-'),
-                _buildButton('0'), _buildButton('C'), _buildButton('='), _buildButton('+'),
-              ],
+            padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+            alignment: Alignment.centerRight,
+            child: Text(
+              _expression,
+              style: const TextStyle(fontSize: 32),
+              textAlign: TextAlign.right,
+            ),
+          ),
+          Expanded(
+            child: Container(
+              width: 300,
+              child: GridView.count(
+                shrinkWrap: true,
+                crossAxisCount: 4,
+                mainAxisSpacing: 10,
+                crossAxisSpacing: 10,
+                padding: const EdgeInsets.all(16),
+                children: [
+                  _buildButton('7'), _buildButton('8'), _buildButton('9'), _buildButton('/'),
+                  _buildButton('4'), _buildButton('5'), _buildButton('6'), _buildButton('*'),
+                  _buildButton('1'), _buildButton('2'), _buildButton('3'), _buildButton('-'),
+                  _buildButton('0'), _buildButton('C'), _buildButton('='), _buildButton('+'),
+                  _buildButton('x²'), // Added square button
+                ],
+              ),
             ),
           ),
         ],
